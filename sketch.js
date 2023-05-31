@@ -3,12 +3,11 @@ function sketch() {
   let sketchArea = document.createElement("div");
 
   let perCell = {
-    height: "42px",
-    width: "42px",
     display: "flex",
-    flexShrink: "0",
     flexDirection: "column",
-    background: "black",
+    flexShrink: '0',
+    height : "40px",
+    width : "40px",
   };
 
   let rows = [];
@@ -16,16 +15,23 @@ function sketch() {
     let row = document.createElement("div");
     rows.push(row);
     Object.assign(row.style, perCell);
-
     sketchArea.appendChild(row);
   }
+  let colR = 0;
+
+  let classNames = [];
   for (let col of rows) {
     for (let size = 0; size < 16; size++) {
       let currCol = document.createElement("div");
       col.appendChild(currCol);
+      currCol.classList.add(`hov${size}-${colR}`);
+
+      classNames.push(`hov${size}-${colR}`)
       Object.assign(currCol.style, perCell);
     }
+    colR += 1;
   }
+  
 
   let sketchStyle = {
     display: "flex",
@@ -36,10 +42,18 @@ function sketch() {
   Object.assign(sketchArea.style, sketchStyle);
   page.appendChild(sketchArea);
   document.body.appendChild(page);
+  return classNames;
 }
 
+function addListenersForHov(classes){
+  for(let val of classes){
+    let currDiv = document.getElementsByClassName(val);
+    currDiv[0].addEventListener('mouseover', (event) => currDiv[0].style.background = "black")
+  }
+}
 function main() {
-  sketch();
+  let clasess = sketch();
+  addListenersForHov(clasess);
 }
 
 main();
