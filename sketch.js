@@ -1,8 +1,9 @@
-function sketch() {
+function sketch(currSize) {
   let page = document.createElement("div");
   let sketchArea = document.createElement("div");
 
-  let currSize = 100;
+  if (currSize > 100) currSize = 100;
+
   let sizeP = pixelSize(currSize);
   let perCell = {
     display: "flex",
@@ -12,6 +13,7 @@ function sketch() {
     width: sizeP,
     margin: "0",
     padding: "0",
+    background: "none",
   };
 
   let rows = [];
@@ -41,6 +43,7 @@ function sketch() {
     height: "640px",
     width: "640px",
     display: "flex",
+    border: "1px solid grey",
   };
 
   Object.assign(sketchArea.style, sketchStyle);
@@ -49,13 +52,49 @@ function sketch() {
 
   let pageStyle = {
     display: "flex",
-    flexDirection : "column",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
   };
   Object.assign(page.style, pageStyle);
+
+  let inputs = createInput();
+  page.appendChild(inputs);
+  page.classList.add('playArea');
+
+  let btn = document.getElementsByClassName("takeInput");
+  btn[0].addEventListener('click', clickOnButton);
+
   return classNames;
 }
+
+function createInput(){
+  let inputs = document.createElement('div');
+  let textInput = document.createElement('textArea');
+  let btn = document.createElement('button');
+
+  let btnSyle = {
+    height: "20px",
+    width: "60px",
+    alignSelf: "center",
+  };
+
+  let inputsStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "4px",
+  }
+
+  textInput.classList.add('textIn');
+  btn.classList.add('takeInput');
+  Object.assign(btn.style, btnSyle);
+  Object.assign(inputs.style, inputsStyle);
+
+  inputs.appendChild(textInput);
+  inputs.appendChild(btn);
+  return inputs;
+}
+
+
 
 function addListenersForHov(classes){
   for(let val of classes){
@@ -68,8 +107,17 @@ function pixelSize(size){
   return ((640/size).toString()+'px')
 }
 
+function clickOnButton(){
+  let tIn = document.getElementsByClassName("textIn")[0].value;
+  tIn = Math.round(tIn);
+  let playArea = document.getElementsByClassName('playArea')[0];
+  playArea.remove();
+  clasess = sketch(tIn);
+  addListenersForHov(clasess);
+}
+
 function main() {
-  let clasess = sketch();
+  let clasess = sketch(16);
   addListenersForHov(clasess);
 }
 
