@@ -90,7 +90,8 @@ function createInput(){
   let textInput = document.createElement('textArea');
   let btn = document.createElement('button');
   let p = document.createElement('p');
-  p.innerText = "Input size:"
+  p.innerText = "Input size:";
+  p.style.margin = "1px";
 
   let btnSyle = {
     height: "20px",
