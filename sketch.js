@@ -1,3 +1,5 @@
+let penColor = "BLACK";
+let gridSize = 16;
 // Create the title
 function title(){
   let headder = document.createElement('p');
@@ -88,7 +90,11 @@ function sketch(currSize) {
 function createInput(){
   let inputs = document.createElement('div');
   let textInput = document.createElement('textArea');
+  let btnsDiv = document.createElement('div');
+
   let btn = document.createElement('button');
+  let rainbowBtn = document.createElement('button');
+  let bnwBtn = document.createElement('button');
   let p = document.createElement('p');
   p.innerText = "Input size:";
   p.style.margin = "1px";
@@ -97,6 +103,8 @@ function createInput(){
     height: "20px",
     width: "60px",
     alignSelf: "center",
+    margin: "2px",
+    padding: "2px"
   };
 
   let inputsStyle = {
@@ -107,21 +115,70 @@ function createInput(){
 
   textInput.classList.add('textIn');
   btn.classList.add('takeInput');
+  
   btn.innerHTML = "Create";
+  bnwBtn.innerHTML = "Black";
+  rainbowBtn.innerHTML = "Rainbow";
   Object.assign(btn.style, btnSyle);
+  Object.assign(bnwBtn.style, btnSyle);
+  Object.assign(rainbowBtn.style, btnSyle);
+
+  btnsDiv.appendChild(btn);
+  btnsDiv.appendChild(rainbowBtn);
+  btnsDiv.appendChild(bnwBtn);
+
+  rainbowBtn.addEventListener('click', rainbowEvent);
+  bnwBtn.addEventListener('click', blackEvent);
+  
   Object.assign(inputs.style, inputsStyle);
   
   inputs.appendChild(p);
+  
   inputs.appendChild(textInput);
-  inputs.appendChild(btn);
+  inputs.appendChild(btnsDiv);
+
   return inputs;
 }
 
+// Rainbow button event 
+function rainbowEvent() {
+  penColor = "RAINBOW";
+  clickOnButton();
+}
+
+// Black button event  
+function blackEvent() {
+ penColor = "BLACK";
+  clickOnButton();
+}
+
+// Set the color as Rainbow 
+function setRainbow(classes) {
+  addListenersForHov(classes, "rainbow");
+}
+
+// Set the color as Black 
+function setBlack(classes) {
+  addListenersForHov(classes, "black")
+}
+
+// Generate a random hexcolor
+function genHex() {
+  let n = (Math.random() * 0xfffff * 1000000).toString(16);
+  return '#' + n.slice(0, 6);
+}
+
 // Adds listeners to all the divs
-function addListenersForHov(classes){
+function addListenersForHov(classes, color){
   for(let val of classes){
     let currDiv = document.getElementsByClassName(val);
-    currDiv[0].addEventListener('mouseover', (event) => currDiv[0].style.background = "black");
+    if(color != 'black'){
+      let rColor = genHex();
+      currDiv[0].addEventListener('mouseover', (event) => currDiv[0].style.background = rColor);
+    }
+    else{
+      currDiv[0].addEventListener('mouseover', (event) => currDiv[0].style.background = color);
+    }
   }
 }
 
@@ -130,20 +187,26 @@ function pixelSize(size){
   return ((640/size).toString()+'px')
 }
 
+
 // Creates new grid with given input 
 function clickOnButton(){
-  let tIn = document.getElementsByClassName("textIn")[0].value;
-  tIn = Math.round(tIn);
+  let tIn = document.getElementsByClassName("textIn")[0].value || 16;
+  gridsize = Math.round(tIn);
   let playArea = document.getElementsByClassName('playArea')[0];
   playArea.remove();
-  clasess = sketch(tIn);
-  addListenersForHov(clasess);
+  let classes = sketch(gridsize);
+  if(penColor == "RAINBOW"){
+    setRainbow(classes);
+  }
+  else{
+    setBlack(classes);
+  }
 }
 
 function main() {
   title();
-  let clasess = sketch(16); // Default gridsize 16
-  addListenersForHov(clasess);
+  let clasess = sketch(gridSize); // Default gridsize 16
+  addListenersForHov(clasess, "black");
 }
 
 main();
